@@ -1,17 +1,20 @@
 from flask import Blueprint, request
 from database import get_db
+from utils.auth_middleware import token_required, apenas_admin
 
 cpus_bp = Blueprint("cpus", __name__, url_prefix="/cpus")
 
-# LISTAR TODAS AS CPUs
+# LISTAR TODAS AS CPUs (QUALQUER USUÁRIO LOGADO)
 @cpus_bp.get("/")
+@token_required
 def listar_todas():
     db = get_db()
     rows = db.execute("SELECT * FROM cpus").fetchall()
     return [dict(row) for row in rows]
 
-# BUSCAR CPU POR ID
+# BUSCAR CPU POR ID (QUALQUER USUÁRIO LOGADO)
 @cpus_bp.get("/<int:id>")
+@token_required
 def buscar(id):
     db = get_db()
     row = db.execute("SELECT * FROM cpus WHERE id = ?", (id,)).fetchone()
@@ -19,8 +22,10 @@ def buscar(id):
         return dict(row)
     return {"erro": "CPU não encontrada"}, 404
 
-# CRIAR CPU NOVA
+# CRIAR CPU NOVA (APENAS ADMIN)
 @cpus_bp.post("/")
+@token_required
+@apenas_admin
 def criar():
     data = request.json
     db = get_db()
@@ -38,11 +43,12 @@ def criar():
     ))
 
     db.commit()
-
     return {"mensagem": "CPU cadastrada com sucesso!"}, 201
 
-# ATUALIZAR CPU
+# ATUALIZAR CPU (APENAS ADMIN)
 @cpus_bp.put("/<int:id>")
+@token_required
+@apenas_admin
 def atualizar(id):
     data = request.json
     db = get_db()
@@ -62,11 +68,12 @@ def atualizar(id):
     ))
 
     db.commit()
-
     return {"mensagem": "CPU atualizada com sucesso!"}
 
-# DELETAR CPU
+# DELETAR CPU (APENAS ADMIN)
 @cpus_bp.delete("/<int:id>")
+@token_required
+@apenas_admin
 def deletar(id):
     db = get_db()
     db.execute("DELETE FROM cpus WHERE id = ?", (id,))

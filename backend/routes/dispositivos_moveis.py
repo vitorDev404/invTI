@@ -1,11 +1,12 @@
 from flask import Blueprint, request
 from database import get_db
+from utils.auth_middleware import token_required, apenas_admin
 
-# Blueprint do módulo
 dispositivos_bp = Blueprint("dispositivos", __name__, url_prefix="/dispositivos")
 
-# LISTAR TODOS
+# LISTAR TODOS (QUALQUER USUÁRIO LOGADO)
 @dispositivos_bp.get("/")
+@token_required
 def listar_todos():
     db = get_db()
     rows = db.execute("SELECT * FROM dispositivos_moveis").fetchall()
@@ -13,6 +14,7 @@ def listar_todos():
 
 # BUSCAR POR ID
 @dispositivos_bp.get("/<int:id>")
+@token_required
 def buscar(id):
     db = get_db()
     row = db.execute("SELECT * FROM dispositivos_moveis WHERE id = ?", (id,)).fetchone()
@@ -20,28 +22,35 @@ def buscar(id):
         return dict(row)
     return {"erro": "Dispositivo não encontrado"}, 404
 
-# CRIAR NOVO
+# CRIAR NOVO (APENAS ADMIN)
 @dispositivos_bp.post("/")
+@token_required
+@apenas_admin
 def criar():
     data = request.json
     db = get_db()
 
-    db.execute("""
-        INSERT INTO dispositivos_moveis (patrimonio, modelo, usuario, cargo_unidade_setor)
-        VALUES (?, ?, ?, ?)
-    """, (
-        data["patrimonio"],
-        data["modelo"],
-        data["usuario"],
-        data["cargo_unidade_setor"]
-    ))
+    try:
+        db.execute("""
+            INSERT INTO dispositivos_moveis (patrimonio, modelo, usuario, cargo_unidade_setor)
+            VALUES (?, ?, ?, ?)
+        """, (
+            data["patrimonio"],
+            data["modelo"],
+            data["usuario"],
+            data["cargo_unidade_setor"]
+        ))
+        db.commit()
 
-    db.commit()
+    except Exception as e:
+        return {"erro": "Patrimônio já existe ou dados inválidos."}, 400
 
     return {"mensagem": "Dispositivo criado com sucesso!"}, 201
 
-# ATUALIZAR
+# ATUALIZAR (APENAS ADMIN)
 @dispositivos_bp.put("/<int:id>")
+@token_required
+@apenas_admin
 def atualizar(id):
     data = request.json
     db = get_db()
@@ -59,14 +68,14 @@ def atualizar(id):
     ))
 
     db.commit()
-
     return {"mensagem": "Atualizado com sucesso!"}
 
-# DELETAR
+# DELETAR (APENAS ADMIN)
 @dispositivos_bp.delete("/<int:id>")
+@token_required
+@apenas_admin
 def deletar(id):
     db = get_db()
     db.execute("DELETE FROM dispositivos_moveis WHERE id = ?", (id,))
     db.commit()
-
     return {"mensagem": "Removido com sucesso!"}

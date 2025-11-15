@@ -1,21 +1,20 @@
 from flask import Blueprint, request
 from database import get_db
+from utils.auth_middleware import token_required, apenas_admin
 
 cpu_itens_bp = Blueprint("cpu_itens", __name__, url_prefix="/cpu_itens")
 
-# LISTAR TODOS OS ITENS DE UMA CPU
+# LISTAR ITENS DE UMA CPU (QUALQUER USUÁRIO LOGADO)
 @cpu_itens_bp.get("/cpu/<int:cpu_id>")
+@token_required
 def listar_por_cpu(cpu_id):
     db = get_db()
-    rows = db.execute(
-        "SELECT * FROM cpu_itens WHERE cpu_id = ?", 
-        (cpu_id,)
-    ).fetchall()
+    rows = db.execute("SELECT * FROM cpu_itens WHERE cpu_id = ?", (cpu_id,)).fetchall()
     return [dict(row) for row in rows]
 
-
-# BUSCAR UM ITEM ESPECÍFICO
+# BUSCAR ITEM INDIVIDUAL
 @cpu_itens_bp.get("/<int:id>")
+@token_required
 def buscar(id):
     db = get_db()
     row = db.execute("SELECT * FROM cpu_itens WHERE id = ?", (id,)).fetchone()
@@ -23,9 +22,10 @@ def buscar(id):
         return dict(row)
     return {"erro": "Item não encontrado"}, 404
 
-
-# ADICIONAR ITEM VINCULADO À CPU
+# ADICIONAR ITEM (APENAS ADMIN)
 @cpu_itens_bp.post("/")
+@token_required
+@apenas_admin
 def criar():
     data = request.json
     db = get_db()
@@ -43,9 +43,10 @@ def criar():
     db.commit()
     return {"mensagem": "Item vinculado com sucesso!"}, 201
 
-
-# ATUALIZAR ITEM
+# ATUALIZAR ITEM (APENAS ADMIN)
 @cpu_itens_bp.put("/<int:id>")
+@token_required
+@apenas_admin
 def atualizar(id):
     data = request.json
     db = get_db()
@@ -64,12 +65,12 @@ def atualizar(id):
     db.commit()
     return {"mensagem": "Item atualizado com sucesso!"}
 
-
-# REMOVER ITEM VINCULADO
+# DELETAR ITEM (APENAS ADMIN)
 @cpu_itens_bp.delete("/<int:id>")
+@token_required
+@apenas_admin
 def deletar(id):
     db = get_db()
     db.execute("DELETE FROM cpu_itens WHERE id = ?", (id,))
     db.commit()
-    
     return {"mensagem": "Item removido com sucesso!"}

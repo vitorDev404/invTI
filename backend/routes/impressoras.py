@@ -1,11 +1,12 @@
 from flask import Blueprint, request
 from database import get_db
+from utils.auth_middleware import token_required, apenas_admin
 
-# Blueprint do módulo de Impressoras
 impressoras_bp = Blueprint("impressoras", __name__, url_prefix="/impressoras")
 
-# LISTAR TODAS
+# LISTAR TODAS (QUALQUER USUÁRIO LOGADO)
 @impressoras_bp.get("/")
+@token_required
 def listar_todas():
     db = get_db()
     rows = db.execute("SELECT * FROM impressoras").fetchall()
@@ -13,6 +14,7 @@ def listar_todas():
 
 # BUSCAR POR ID
 @impressoras_bp.get("/<int:id>")
+@token_required
 def buscar(id):
     db = get_db()
     row = db.execute("SELECT * FROM impressoras WHERE id = ?", (id,)).fetchone()
@@ -20,8 +22,10 @@ def buscar(id):
         return dict(row)
     return {"erro": "Impressora não encontrada"}, 404
 
-# CRIAR NOVA
+# CRIAR NOVA (APENAS ADMIN)
 @impressoras_bp.post("/")
+@token_required
+@apenas_admin
 def criar():
     data = request.json
     db = get_db()
@@ -39,14 +43,16 @@ def criar():
         data["nome_impressora_servidor"],
         data["ndd"],
         data["mac"],
-        data.get("observacoes", "")  # opcional
+        data.get("observacoes", "")
     ))
 
     db.commit()
     return {"mensagem": "Impressora cadastrada com sucesso!"}, 201
 
-# ATUALIZAR
+# ATUALIZAR (APENAS ADMIN)
 @impressoras_bp.put("/<int:id>")
+@token_required
+@apenas_admin
 def atualizar(id):
     data = request.json
     db = get_db()
@@ -72,8 +78,10 @@ def atualizar(id):
     db.commit()
     return {"mensagem": "Impressora atualizada com sucesso!"}
 
-# DELETAR
+# DELETAR (APENAS ADMIN)
 @impressoras_bp.delete("/<int:id>")
+@token_required
+@apenas_admin
 def deletar(id):
     db = get_db()
     db.execute("DELETE FROM impressoras WHERE id = ?", (id,))
