@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventário TI - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/paginas.css">
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
-<body onload="verificarLogin()">
+<body onload="verificarLogin(); carregarDashboard()">
 
     <!-- MENU LATERAL -->
     <aside class="sidebar">
-        <h2>Inventário TI</h2>
+        <h2 style="margin-left: 60px;">Inventário TI</h2>
 
         <nav>
             <a href="dashboard.html" class="active">Início</a>
@@ -25,11 +27,46 @@
     </aside>
 
     <!-- CONTEÚDO PRINCIPAL (MINIMALISTA) -->
-    <main class="content">
-        <h1 style="padding-left: 40%;">Dashboard</h1>
-    </main>
+    <main class="dash-content">
+    <h2 class="dash-title">Visão Geral do Inventário</h2>
 
+    <div class="dash-wrapper">
+
+        <div class="dash-grafico">
+            <canvas id="graficoTotais" height="180"></canvas>
+        </div>
+
+        <div class="dash-cards">
+            <div class="dash-card">
+                <h3>Dispositivos</h3>
+                <p id="cardDispositivos">0</p>
+            </div>
+
+            <div class="dash-card">
+                <h3>Racks</h3>
+                <p id="cardRacks">0</p>
+            </div>
+
+            <div class="dash-card">
+                <h3>Impressoras</h3>
+                <p id="cardImpressoras">0</p>
+            </div>
+
+            <div class="dash-card">
+                <h3>CPUs</h3>
+                <p id="cardCPUs">0</p>
+            </div>
+
+            <div class="dash-card">
+                <h3>Itens de CPU</h3>
+                <p id="cardItensCPU">0</p>
+            </div>
+        </div>
+
+    </div>
+</main>
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
 </body>
 </html>

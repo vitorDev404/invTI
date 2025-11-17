@@ -8,6 +8,8 @@ from routes.cpus import cpus_bp
 from routes.cpu_itens import cpu_itens_bp
 from routes.auth import auth_bp
 from routes.usuarios import usuarios_bp  # se existir
+from routes.stats import stats_bp
+
 
 app = Flask(__name__)
 
@@ -25,7 +27,7 @@ app.register_blueprint(cpus_bp)
 app.register_blueprint(cpu_itens_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(usuarios_bp)  
-
+app.register_blueprint(stats_bp)
 @app.route("/")
 def home():
     return {"status": "API do Inventário funcionando!"}
