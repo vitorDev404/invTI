@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Racks</title>
+    <link rel="stylesheet" href="css/paginas.css" />
+</head>
+<body onload="verificarLogin(); carregarRacks()">
+
+<aside class="sidebar">
+    <h2>Inventário TI</h2>
+
+    <nav>
+        <a href="dashboard.html">Início</a>
+        <a href="dispositivos.html">Dispositivos Móveis</a>
+        <a href="racks.html" class="active">Racks</a>
+        <a href="impressoras.html">Impressoras</a>
+        <a href="cpus.html">CPUs</a>
+        <a href="usuarios.html" class="admin-only">Usuários</a>
+    </nav>
+
+    <button onclick="logout()" class="logout">Sair</button>
+</aside>
+
+<main class="content">
+    <h1>Racks</h1>
+
+    <div class="top-bar">
+        <input type="text" id="busca" class="input-busca" placeholder="Buscar rack..."
+            onkeyup="aplicarFiltro('busca','tabela-racks')">
+
+        <button onclick="abrirModalCriacao()" class="btn-add">+ Adicionar Rack</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Patrimônio</th>
+                <th>Rack</th>
+                <th>Voltagem</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="tabela-racks"></tbody>
+    </table>
+
+    <div id="paginacao-racks" class="pagination"></div>
+</main>
+
+<!-- MODAL CRIAR -->
+<div id="modalCriar" class="modal">
+    <div class="modal-content">
+        <h2>Novo Rack</h2>
+
+        <input id="patrimonioCriar" placeholder="Patrimônio" />
+        <input id="nomeCriar" placeholder="Nome do Rack" />
+        <input id="voltagemCriar" placeholder="Voltagem" />
+
+        <button onclick="criarRack()">Salvar</button>
+        <button class="btn-cancel" onclick="fecharModalCriar()">Cancelar</button>
+    </div>
+</div>
+
+<!-- MODAL EDITAR -->
+<div id="modalEditar" class="modal">
+    <div class="modal-content">
+        <h2>Editar Rack</h2>
+
+        <input type="hidden" id="idEditar" />
+        <input id="patrimonioEditar" placeholder="Patrimônio" />
+        <input id="nomeEditar" placeholder="Nome do Rack" />
+        <input id="voltagemEditar" placeholder="Voltagem" />
+
+        <button onclick="salvarEdicaoRack()">Salvar</button>
+        <button class="btn-cancel" onclick="fecharModalEditar()">Cancelar</button>
+    </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/filtro.js"></script>
+<script src="js/pagination.js"></script>
+<script src="js/racks.js"></script>
+
+</body>
+</html>

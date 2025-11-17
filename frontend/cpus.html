@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPUs</title>
+    <link rel="stylesheet" href="css/paginas.css">
+</head>
+<body onload="verificarLogin(); carregarCPUs()">
+
+<aside class="sidebar">
+    <h2>Inventário TI</h2>
+
+    <nav>
+        <a href="dashboard.html">Início</a>
+        <a href="dispositivos.html">Dispositivos Móveis</a>
+        <a href="racks.html">Racks</a>
+        <a href="impressoras.html">Impressoras</a>
+        <a href="cpus.html" class="active">CPUs</a>
+        <a href="usuarios.html" class="admin-only">Usuários</a>
+    </nav>
+
+    <button onclick="logout()" class="logout">Sair</button>
+</aside>
+
+<main class="content">
+    <h1>CPUs</h1>
+
+    <div class="top-bar">
+        <input type="text" id="busca" class="input-busca"
+               placeholder="Buscar CPU..."
+               onkeyup="aplicarFiltro('busca','tabela-cpus')">
+
+        <button onclick="abrirModalCriacao()" class="btn-add">+ Adicionar CPU</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Patrimônio</th>
+                <th>Hostname</th>
+                <th>Setor</th>
+                <th>Impressora</th>
+                <th>IP</th>
+                <th>Local</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+
+        <tbody id="tabela-cpus"></tbody>
+    </table>
+
+    <div id="paginacao-cpus" class="pagination"></div>
+</main>
+
+<!-- MODAL CRIAR -->
+<div id="modalCriar" class="modal">
+    <div class="modal-content">
+        <h2>Nova CPU</h2>
+
+        <input id="patrimonioCriar" placeholder="Patrimônio">
+        <input id="hostnameCriar" placeholder="Hostname">
+        <input id="setorCriar" placeholder="Setor">
+        <input id="impressoraCriar" placeholder="Impressora">
+        <input id="ipCriar" placeholder="IP">
+        <input id="localCriar" placeholder="Local">
+
+        <button onclick="criarCPU()">Salvar</button>
+        <button class="btn-cancel" onclick="fecharModalCriar()">Cancelar</button>
+    </div>
+</div>
+
+<!-- MODAL EDITAR -->
+<div id="modalEditar" class="modal">
+    <div class="modal-content">
+        <h2>Editar CPU</h2>
+
+        <input id="idEditar" type="hidden">
+        <input id="patrimonioEditar" placeholder="Patrimônio">
+        <input id="hostnameEditar" placeholder="Hostname">
+        <input id="setorEditar" placeholder="Setor">
+        <input id="impressoraEditar" placeholder="Impressora">
+        <input id="ipEditar" placeholder="IP">
+        <input id="localEditar" placeholder="Local">
+
+        <button onclick="salvarEdicaoCPU()">Salvar</button>
+        <button class="btn-cancel" onclick="fecharModalEditar()">Cancelar</button>
+    </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/filtro.js"></script>
+<script src="js/pagination.js"></script>
+<script src="js/cpus.js"></script>
+
+</body>
+</html>

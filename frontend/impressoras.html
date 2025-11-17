@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impressoras</title>
+    <link rel="stylesheet" href="css/paginas.css">
+</head>
+<body onload="verificarLogin(); carregarImpressoras()">
+
+<aside class="sidebar">
+    <h2>Inventário TI</h2>
+
+    <nav>
+        <a href="dashboard.html">Início</a>
+        <a href="dispositivos.html">Dispositivos Móveis</a>
+        <a href="racks.html">Racks</a>
+        <a href="impressoras.html" class="active">Impressoras</a>
+        <a href="cpus.html">CPUs</a>
+        <a href="usuarios.html" class="admin-only">Usuários</a>
+    </nav>
+
+    <button onclick="logout()" class="logout">Sair</button>
+</aside>
+
+<main class="content">
+    <h1>Impressoras</h1>
+
+    <div class="top-bar">
+        <input type="text" id="busca" class="input-busca"
+               placeholder="Buscar impressora..."
+               onkeyup="aplicarFiltro('busca','tabela-impressoras')">
+
+        <button onclick="abrirModalCriacao()" class="btn-add">+ Adicionar Impressora</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Modelo</th>
+                <th>Unidade</th>
+                <th>Local</th>
+                <th>Nº Série</th>
+                <th>IP</th>
+                <th>Nome Servidor</th>
+                <th>NDD</th>
+                <th>MAC</th>
+                <th>OBS</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="tabela-impressoras"></tbody>
+    </table>
+
+    <div id="paginacao-impressoras" class="pagination"></div>
+</main>
+
+<!-- MODAL CRIAR -->
+<div id="modalCriar" class="modal">
+    <div class="modal-content">
+        <h2>Nova Impressora</h2>
+
+        <input id="modeloCriar" placeholder="Modelo">
+        <input id="unidadeCriar" placeholder="Unidade">
+        <input id="localCriar" placeholder="Local">
+        <input id="numeroCriar" placeholder="Nº de Série">
+        <input id="ipCriar" placeholder="IP do Equipamento">
+        <input id="nomeServidorCriar" placeholder="Nome no Servidor">
+        <input id="nddCriar" placeholder="NDD">
+        <input id="macCriar" placeholder="MAC">
+        <textarea id="obsCriar" placeholder="Observações"></textarea>
+
+        <button onclick="criarImpressora()">Salvar</button>
+        <button class="btn-cancel" onclick="fecharModalCriar()">Cancelar</button>
+    </div>
+</div>
+
+<!-- MODAL EDITAR -->
+<div id="modalEditar" class="modal">
+    <div class="modal-content">
+        <h2>Editar Impressora</h2>
+
+        <input id="idEditar" type="hidden">
+        <input id="modeloEditar" placeholder="Modelo">
+        <input id="unidadeEditar" placeholder="Unidade">
+        <input id="localEditar" placeholder="Local">
+        <input id="numeroEditar" placeholder="Nº de Série">
+        <input id="ipEditar" placeholder="IP">
+        <input id="nomeServidorEditar" placeholder="Nome Servidor">
+        <input id="nddEditar" placeholder="NDD">
+        <input id="macEditar" placeholder="MAC">
+        <textarea id="obsEditar" placeholder="Observações"></textarea>
+
+        <button onclick="salvarEdicaoImpressora()">Salvar</button>
+        <button class="btn-cancel" onclick="fecharModalEditar()">Cancelar</button>
+    </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/filtro.js"></script>
+<script src="js/pagination.js"></script>
+<script src="js/impressoras.js"></script>
+
+</body>
+</html>

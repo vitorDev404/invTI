@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuários</title>
+    <link rel="stylesheet" href="css/paginas.css">
+</head>
+<body onload="verificarLogin(); carregarUsuarios()">
+
+<aside class="sidebar">
+    <h2>Inventário TI</h2>
+
+    <nav>
+        <a href="dashboard.html">Início</a>
+        <a href="dispositivos.html">Dispositivos Moveis</a>
+        <a href="racks.html">Racks</a>
+        <a href="impressoras.html">Impressoras</a>
+        <a href="cpus.html">CPUs</a>
+        <a href="usuarios.html" class="active">Usuários</a>
+    </nav>
+
+    <button onclick="logout()" class="logout">Sair</button>
+</aside>
+
+<main class="content">
+    <h1>Usuários</h1>
+
+    <div class="top-bar">
+        <input type="text" id="busca" class="input-busca"
+               placeholder="Buscar usuário..."
+               onkeyup="aplicarFiltro('busca','tabela-usuarios')">
+
+        <button onclick="abrirModalCriacao()"" class="btn-add">+ Adicionar Usuário</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Nível</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+
+        <tbody id="tabela-usuarios"></tbody>
+    </table>
+
+    <div id="paginacao-usuarios" class="pagination"></div>
+</main>
+
+<!-- MODAL CRIAR -->
+<div id="modalCriar" class="modal">
+    <div class="modal-content">
+        <h2>Novo Usuário</h2>
+
+        <input id="nomeCriar" placeholder="Nome">
+        <input id="emailCriar" placeholder="Email">
+        <input id="senhaCriar" type="password" placeholder="Senha">
+        <select id="nivelCriar">
+            <option value="usuario">Usuário</option>
+            <option value="admin">Admin</option>
+        </select>
+
+        <button onclick="criarUsuario()">Salvar</button>
+        <button onclick="fecharModalCriar()" class="btn-cancel">Cancelar</button>
+    </div>
+</div>
+
+<!-- MODAL EDITAR -->
+<div id="modalEditar" class="modal">
+    <div class="modal-content">
+        <h2>Editar Usuário</h2>
+
+        <input id="idEditar" type="hidden">
+        <input id="nomeEditar" placeholder="Nome">
+        <input id="emailEditar" placeholder="Email">
+        <input id="senhaEditar" placeholder="Nova senha (opcional)">
+        <select id="nivelEditar">
+            <option value="usuario">Usuário</option>
+            <option value="admin">Admin</option>
+        </select>
+
+        <button onclick="salvarEdicaoUsuario()">Salvar</button>
+        <button onclick="fecharModalEditar()" class="btn-cancel">Cancelar</button>
+    </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/filtro.js"></script>
+<script src="js/pagination.js"></script>
+<script src="js/usuarios.js"></script>
+
+</body>
+</html>

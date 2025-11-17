@@ -20,7 +20,9 @@ function verificarLogin() {
     const token = localStorage.getItem("token");
     if (!token) {
         window.location.href = "index.html";
-        return;
+        document.getElementById("usuario-logado").innerText =
+    `🔐 Logado como: ${usuario.email} (${usuario.nivel_acesso})`;
+    return;
     }
 
     const usuario = JSON.parse(localStorage.getItem("usuario"));

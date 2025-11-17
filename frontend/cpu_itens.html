@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Itens da CPU</title>
+    <link rel="stylesheet" href="css/paginas.css">
+</head>
+<body onload="verificarLogin(); carregarItensCPU()">
+
+<aside class="sidebar">
+    <h2>Inventário TI</h2>
+
+    <nav>
+        <a href="dashboard.html">Início</a>
+        <a href="dispositivos.html">Dispositivos</a>
+        <a href="racks.html">Racks</a>
+        <a href="impressoras.html">Impressoras</a>
+        <a href="cpus.html">CPUs</a>
+        <a href="usuarios.html" class="admin-only">Usuários</a>
+    </nav>
+
+    <button onclick="logout()" class="logout">Sair</button>
+</aside>
+
+<main class="content">
+
+    <h1 id="titulo-pagina">Itens da CPU</h1>
+
+    <div class="top-bar">
+        <input type="text" id="busca" class="input-busca"
+               placeholder="Buscar item..."
+               onkeyup="aplicarFiltro('busca','tabela-itens')">
+
+        <button onclick="abrirModalCriacao()" class="btn-add">+ Adicionar Item</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Patrimônio</th>
+                <th>Descrição</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="tabela-itens"></tbody>
+    </table>
+
+    <div id="paginacao-itens" class="pagination"></div>
+
+</main>
+
+<!-- MODAL CRIAR -->
+<div id="modalCriar" class="modal">
+    <div class="modal-content">
+        <h2>Novo Item</h2>
+
+        <input id="tipoCriar" placeholder="Tipo">
+        <input id="patrimonioCriar" placeholder="Patrimônio">
+        <textarea id="descricaoCriar" placeholder="Descrição"></textarea>
+
+        <button onclick="criarItem()">Salvar</button>
+        <button class="btn-cancel" onclick="fecharModalCriar()">Cancelar</button>
+    </div>
+</div>
+
+<!-- MODAL EDITAR -->
+<div id="modalEditar" class="modal">
+    <div class="modal-content">
+        <h2>Editar Item</h2>
+
+        <input id="idEditar" type="hidden">
+        <input id="tipoEditar" placeholder="Tipo">
+        <input id="patrimonioEditar" placeholder="Patrimônio">
+        <textarea id="descricaoEditar" placeholder="Descrição"></textarea>
+
+        <button onclick="salvarEdicaoItem()">Salvar</button>
+        <button class="btn-cancel" onclick="fecharModalEditar()">Cancelar</button>
+    </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/filtro.js"></script>
+<script src="js/pagination.js"></script>
+<script src="js/cpu_itens.js"></script>
+
+</body>
+</html>

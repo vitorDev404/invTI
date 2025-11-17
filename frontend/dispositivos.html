@@ -8,83 +8,91 @@
 </head>
 <body onload="verificarLogin(); carregarDispositivos()">
 
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <h2>Inventário TI</h2>
 
-    <!-- MENU LATERAL -->
-    <aside class="sidebar">
-        <h2>Inventário TI</h2>
+    <nav>
+        <a href="dashboard.html">Início</a>
+        <a href="dispositivos.html" class="active">Dispositivos Móveis</a>
+        <a href="racks.html">Racks</a>
+        <a href="impressoras.html">Impressoras</a>
+        <a href="cpus.html">CPUs</a>
+        <a href="usuarios.html" class="admin-only">Usuários</a>
+    </nav>
 
-        <nav>
-            <a href="dashboard.html">Início</a>
-            <a href="dispositivos.html" class="active">Dispositivos Móveis</a>
-            <a href="racks.html">Racks</a>
-            <a href="impressoras.html">Impressoras</a>
-            <a href="cpus.html">CPUs</a>
-            <a href="cpu_itens.html">Itens da CPU</a>
-            <a href="usuarios.html" class="admin-only">Usuários</a>
-        </nav>
+    <button class="logout" onclick="logout()">Sair</button>
+</aside>
 
-        <button class="logout" onclick="logout()">Sair</button>
-    </aside>
+<!-- CONTEÚDO PRINCIPAL -->
+<main class="content">
+    <h1>Dispositivos Móveis</h1>
 
-    <!-- CONTEÚDO -->
-    <main class="content">
-        <h1>Dispositivos Móveis</h1>
-        <p>Gerencie os dispositivos móveis cadastrados no sistema.</p>
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <input type="text" id="busca" class="input-busca"
+               placeholder="Buscar dispositivo..."
+               onkeyup="aplicarFiltro('busca','tabela-dispositivos')">
 
-        <button onclick="abrirModalCriar()">+ Adicionar Dispositivo</button>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Patrimônio</th>
-                    <th>Modelo</th>
-                    <th>Usuário</th>
-                    <th>Cargo/Unidade/Setor</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody id="tabela-dispositivos">
-                <!-- Dados inseridos via JS -->
-            </tbody>
-        </table>
-    </main>
-
-    <!-- MODAL CADASTRO -->
-    <div id="modalCriar" class="modal">
-        <div class="modal-content">
-            <h2>Novo Dispositivo</h2>
-
-            <input id="patrimonioCriar" placeholder="Patrimônio">
-            <input id="modeloCriar" placeholder="Modelo">
-            <input id="usuarioCriar" placeholder="Usuário">
-            <input id="cargoCriar" placeholder="Cargo / Unidade / Setor">
-
-            <button onclick="criarDispositivo()">Salvar</button>
-            <button class="btn-cancel" onclick="fecharModalCriar()">Cancelar</button>
-        </div>
+        <button onclick="abrirModalCriacao()" class="btn-add">+ Adicionar Dispositivo</button>
     </div>
 
-    <!-- MODAL EDITAR -->
-    <div id="modalEditar" class="modal">
-        <div class="modal-content">
-            <h2>Editar Dispositivo</h2>
+    <!-- TABELA -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Patrimônio</th>
+                <th>Modelo</th>
+                <th>Usuário</th>
+                <th>Cargo / Unidade / Setor</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
 
-            <input id="idEditar" type="hidden">
-            <input id="patrimonioEditar" placeholder="Patrimônio">
-            <input id="modeloEditar" placeholder="Modelo">
-            <input id="usuarioEditar" placeholder="Usuário">
-            <input id="cargoEditar" placeholder="Cargo / Unidade / Setor">
+        <tbody id="tabela-dispositivos"></tbody>
+    </table>
 
-            <button onclick="salvarEdicao()">Salvar</button>
-            <button class="btn-cancel" onclick="fecharModalEditar()">Cancelar</button>
-        </div>
+    <!-- PAGINAÇÃO -->
+    <div id="paginacao-dispositivos" class="pagination"></div>
+</main>
+
+<!-- MODAL CRIAR -->
+<div id="modalCriar" class="modal">
+    <div class="modal-content">
+        <h2>Novo Dispositivo</h2>
+
+        <input id="patrimonioCriar" placeholder="Patrimônio">
+        <input id="modeloCriar" placeholder="Modelo">
+        <input id="usuarioCriar" placeholder="Usuário">
+        <input id="cargoCriar" placeholder="Cargo/Unidade/Setor">
+
+        <button onclick="criarDispositivo()">Salvar</button>
+        <button class="btn-cancel" onclick="fecharModalCriar()">Cancelar</button>
     </div>
+</div>
 
-    <script src="js/auth.js"></script>
-    <script src="js/api.js"></script>
-    <script src="js/dispositivos.js"></script>
+<!-- MODAL EDITAR -->
+<div id="modalEditar" class="modal">
+    <div class="modal-content">
+        <h2>Editar Dispositivo</h2>
 
+        <input id="idEditar" type="hidden">
+        <input id="patrimonioEditar" placeholder="Patrimônio">
+        <input id="modeloEditar" placeholder="Modelo">
+        <input id="usuarioEditar" placeholder="Usuário">
+        <input id="cargoEditar" placeholder="Cargo / Unidade / Setor">
+
+        <button onclick="salvarEdicaoDispositivo()">Salvar</button>
+        <button class="btn-cancel" onclick="fecharModalEditar()">Cancelar</button>
+    </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/filtro.js"></script>
+<script src="js/pagination.js"></script>
+<script src="js/dispositivos.js"></script>
 
 </body>
 </html>

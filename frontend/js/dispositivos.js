@@ -1,11 +1,16 @@
-async function carregarDispositivos() {
-    try {
-        const dispositivos = await apiRequest("/dispositivos/");
-        const tbody = document.getElementById("tabela-dispositivos");
+// dispositivos.js - paginação + CRUD
+const LIMIT_DISPOSITIVOS = 10;
+let paginaDispositivos = 1;
 
+async function carregarDispositivos(page = 1) {
+    paginaDispositivos = page;
+    try {
+        const resp = await apiRequest(`/dispositivos?page=${page}&limit=${LIMIT_DISPOSITIVOS}`);
+        const dados = resp.dados || [];
+        const tbody = document.getElementById("tabela-dispositivos");
         tbody.innerHTML = "";
 
-        dispositivos.forEach(dis => {
+        dados.forEach(dis => {
             tbody.innerHTML += `
                 <tr>
                     <td>${dis.id}</td>
@@ -14,44 +19,96 @@ async function carregarDispositivos() {
                     <td>${dis.usuario}</td>
                     <td>${dis.cargo_unidade_setor}</td>
                     <td>
-                        <button onclick="deletarDispositivo(${dis.id})">🗑️</button>
+                        <button onclick="abrirModalEditarDispositivo(${dis.id})">Editar</button>
+                        <button onclick="deletarDispositivo(${dis.id})">Excluir</button>
                     </td>
                 </tr>
             `;
         });
 
-    } catch (error) {
-        console.error("Erro ao carregar dispositivos:", error);
+        criarPaginacao("paginacao-dispositivos", resp.pagina, resp.total_paginas, carregarDispositivos);
+    } catch (e) {
+        console.error("Erro carregar dispositivos:", e);
+        alert("Erro ao carregar dispositivos!");
     }
 }
 
+// CREATE
+async function criarDispositivo() {
+    try {
+        await apiRequest("/dispositivos", "POST", {
+            patrimonio: document.getElementById("patrimonioCriar").value,
+            modelo: document.getElementById("modeloCriar").value,
+            usuario: document.getElementById("usuarioCriar").value,
+            cargo_unidade_setor: document.getElementById("cargoCriar").value
+        });
+        fecharModalCriar();
+        carregarDispositivos(paginaDispositivos);
+    } catch (e) {
+        alert("Erro ao criar dispositivo: " + e.message);
+    }
+}
 
-function abrirModalCriar() {
-    document.getElementById("modalCriar").style.display = "flex";
+// DELETE
+async function deletarDispositivo(id) {
+    if (!confirm("Confirmar exclusão?")) return;
+    try {
+        await apiRequest(`/dispositivos/${id}`, "DELETE");
+        carregarDispositivos(paginaDispositivos);
+    } catch (e) {
+        alert("Erro ao deletar: " + e.message);
+    }
+}
+
+// EDIT FLOW - fetch item then fill modal
+async function abrirModalEditarDispositivo(id) {
+    try {
+        const item = await apiRequest(`/dispositivos/${id}`);
+        document.getElementById("idEditar").value = item.id;
+        document.getElementById("patrimonioEditar").value = item.patrimonio;
+        document.getElementById("modeloEditar").value = item.modelo;
+        document.getElementById("usuarioEditar").value = item.usuario;
+        document.getElementById("cargoEditar").value = item.cargo_unidade_setor;
+        document.getElementById("modalEditar").style.display = "flex";
+    } catch (e) {
+        alert("Erro ao buscar dispositivo: " + e.message);
+    }
+}
+
+async function salvarEdicaoDispositivo() {
+    const id = document.getElementById("idEditar").value;
+    try {
+        await apiRequest(`/dispositivos/${id}`, "PUT", {
+            patrimonio: document.getElementById("patrimonioEditar").value,
+            modelo: document.getElementById("modeloEditar").value,
+            usuario: document.getElementById("usuarioEditar").value,
+            cargo_unidade_setor: document.getElementById("cargoEditar").value
+        });
+        fecharModalEditar();
+        carregarDispositivos(paginaDispositivos);
+    } catch (e) {
+        alert("Erro ao salvar edição: " + e.message);
+    }
+}
+
+// ensure initial load
+window.addEventListener("load", () => carregarDispositivos(1));
+function abrirModalCriacao() {
+    const modal = document.getElementById("modalCriar");
+    if (modal) modal.style.display = "flex";
 }
 
 function fecharModalCriar() {
-    document.getElementById("modalCriar").style.display = "none";
+    const modal = document.getElementById("modalCriar");
+    if (modal) modal.style.display = "none";
 }
 
-async function criarDispositivo() {
-    const patrimonio = document.getElementById("patrimonioCriar").value;
-    const modelo = document.getElementById("modeloCriar").value;
-    const usuario = document.getElementById("usuarioCriar").value;
-    const setor = document.getElementById("cargoCriar").value;
+function abrirModalEditar() {
+    const modal = document.getElementById("modalEditar");
+    if (modal) modal.style.display = "flex";
+}
 
-    try {
-        await apiRequest("/dispositivos/", "POST", {
-            patrimonio,
-            modelo,
-            usuario,
-            cargo_unidade_setor: setor
-        });
-
-        fecharModalCriar();
-        carregarDispositivos();
-
-    } catch (error) {
-        alert("Erro ao criar dispositivo: " + error.message);
-    }
+function fecharModalEditar() {
+    const modal = document.getElementById("modalEditar");
+    if (modal) modal.style.display = "none";
 }
